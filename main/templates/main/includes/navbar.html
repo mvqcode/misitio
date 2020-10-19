@@ -1,0 +1,147 @@
+<!--INICIO  ZONA DESPLEGABLE DE CATEGORÍAS-->
+<ul id="dropdown1" class="dropdown-content">
+  {% for categoria in categorias %}
+  {% if activa == categoria.nomcat %}
+  <li class="tab grey">
+    <p style="color: aliceblue;"><a href="/{{ categoria.nomcat }}">{{ categoria.textcat }}</a></p>
+  </li>
+  <li class="divider"></li>
+  {% else %}
+  <li class="tab"><a href="/{{ categoria.nomcat }}">{{ categoria.textcat }}</a></li>
+  {% endif %}
+  {% endfor %}
+</ul>
+<!--FIN  ZONA DESPLEGABLE DE CATEGORÍAS-->
+
+<!--INICIO ZONA DE MENUS QUE SOLO APAERCEN EN NAVEGADOR PC-->
+<nav class="nav-mobile" style="position: fixed; z-index: 3;">
+  <div>
+    <div style="margin-left: 10px;text-align: left; width:300px;"><a href="#home" class="brand-logo"
+        style="width: 150px;">
+        Ultinoticias</i></a>
+    </div>
+
+    <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+
+      {% if categorias %}
+
+      <li style="margin-top: 5px;">
+        <form action="{% url 'main:busqueda' %}" method="get">
+          <div class="input-field">
+            <input id="search" type="search" name="search" placeholder="Texto a buscar..." required>
+            <i class="white-text material-icons sufix">search</i>
+            <i class="material-icons">close</i>
+          </div>
+        </form>
+      </li>
+
+      {% if user.is_authenticated %}
+
+      {% if activa == "recomendados" %}
+      <li class="tab"><b><a href="/recomendados">Recomendados para {{user.username}} </a></b>
+      </li>
+      {% else %}
+      <li class="tab"><a href="/recomendados">Recomendados para {{user.username}} </a></li>
+      {% endif %}
+      {% endif %}
+
+      <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">
+          {% if activa != "recomendados" %}
+          <b>{{ activa |capfirst}}</b>
+          {% else %}
+          Categorías
+          {% endif %}
+          <i class="material-icons right">arrow_drop_down</i></a></li>
+
+      {% endif %}
+
+      <li><a href="/recomendados">Inicio</a></li>
+
+      {% if user.is_authenticated %}
+
+      <li><a id="nomusuario" href="/user">{{user.username}}</a></li>
+      <li><a href="/logout">Salir</a></li>
+      {% else %}
+      <li><a href="/registro">Registro</a></li>
+      <li><a href="/login">Login</a></li>
+      {% endif %}
+
+    </ul>
+  </div>
+</nav>
+<!--FIN DE ZONA NAVEGABLE EN PC-->
+
+<!--INICIO DE ZONA DESPLEGABLE EN MOVIL-->
+<ul class="sidenav" id="mobile-demo" style="width: 270px;">
+  <li><a href="/">Inicio</a></li>
+
+  {% if categorias %}
+
+  <li style="margin-top: 5px; margin-left: 32px;">
+    <form action="{% url 'main:busqueda' %}" method="get">
+      <div class="input-field">
+        <input id="search" type="search" name="search" placeholder="Texto a buscar..." required>
+        <i class="black-text material-icons sufix" style="top:10px">search</i>
+      </div>
+    </form>
+  </li>
+  <li>
+    {% if user.is_authenticated %}
+    {% if activa == "recomendados" %}
+  <li><a href="/recomendados"><b>Recomendados para {{user.username}}</b> </a>
+  </li>
+  {% else %}
+  <li><a href="/recomendados">Recomendados para {{user.username}} </a></li>
+  {% endif %}
+  <li class="divider"></li>
+  {% endif %}
+
+  <ul>
+    {% for categoria in categorias %}
+    {% if activa == categoria.nomcat %}
+    <li>
+      <a class="active" href="/{{ categoria.nomcat }}"><b>{{ categoria.textcat }}</b></a>
+    </li>
+    {% else %}
+    <li><a href="/{{ categoria.nomcat }}">{{ categoria.textcat }}</a></li>
+    {% endif %}
+    {% endfor %}
+  </ul>
+  <li class="divider"></li>
+
+  {% endif %}
+
+  {% if user.is_authenticated %}
+  <li><a href="/user">{{user.username}}</a></li>
+  <li><a href="/logout">Salir</a></li>
+  {% else %}
+  <li><a href="/registro">Registro</a></li>
+  <li><a href="/login">Login</a></li>
+  {% endif %}
+</ul>
+<!--FIN DE ZONA DESPLEGABLE EN MOVIL-->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var elems = document.querySelectorAll('.sidenav');
+    var instances = M.Sidenav.init(elems, options);
+  });
+
+  // Or with jQuery
+
+  $(document).ready(function () {
+    $('.sidenav').sidenav();
+  });
+</script>
+<!-- <ul class="sidenav" id="mobile-demo">
+    <li><a href="sass.html">Sass</a></li>
+    <li><a href="badges.html">Components</a></li>
+    <li><a href="collapsible.html">JavaScript</a></li>
+  </ul> -->
+
+<!-- <div id="test1" class="col s12">Test 1</div>
+  <div id="test2" class="col s12">Test 2</div>
+  <div id="test3" class="col s12">Test 3</div>
+  <div id="test4" class="col s12">Test 4</div> -->

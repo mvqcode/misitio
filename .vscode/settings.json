@@ -1,0 +1,32 @@
+{
+    "python.pythonPath": "C:\\Users\\IVAN\\Anaconda3\\envs\\django\\python.exe",
+    // my custom settings
+    "editor.formatOnSave": true,
+    "editor.rulers": [
+        80,
+        120
+    ],
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        ".vscode": true,
+        "**/*.pyc": true,
+    },
+    "workbench.editor.enablePreview": false,
+    "editor.minimap.enabled": false,
+    "python.linting.pylintArgs": [
+        "--load-plugins",
+        "pylint_django"
+    ],
+    "files.associations": {
+        "**/templates/*.html": "django-html",
+        "**/templates/*": "django-txt",
+        "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+    },
+    "emmet.includeLanguages": {
+        "django-html": "html"
+    },
+}

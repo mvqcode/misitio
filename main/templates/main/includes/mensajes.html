@@ -1,0 +1,45 @@
+{% if messages %}
+{% for message in messages %}
+<p>{{message}} <a href="usuariorec/">¿Recuperar Contraseña?</a> </p>
+{% if message.tags == 'success' %}
+<script>
+    M.toast({
+        html: '{{message}}',
+        classes: 'green rounded',
+        displayLength: 2000,
+    });
+</script>
+{% endif %}
+
+{% if message.tags == 'info' %}
+<script type="text/javascript">
+    M.toast({
+        html: '{{message}}',
+        classes: 'blue rounded',
+        displayLength: 2000,
+    });
+</script>
+{% endif %}
+
+{% if message.tags == 'warning' %}
+<script type="text/javascript">
+    M.toast({
+        html: '{{message}}',
+        classes: 'orange rounded',
+        displayLength: 2000,
+    });
+</script>
+{% endif %}
+
+{% if message.tags == 'error' %}
+<script type="text/javascript">
+    M.toast({
+        html: '{{message}}',
+        classes: 'red rounded',
+        displayLength: 2000,
+    });
+</script>
+{% endif %}
+
+{% endfor %}
+{% endif %}

@@ -1,0 +1,484 @@
+[33mcommit 279483cc4795092455f469b6c76ae398232a150e[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: ivansoriasolis <soria.solis.ivan@googlemail.com>
+Date:   Wed Sep 23 12:55:27 2020 -0500
+
+    con registro de usuarios y mensajes de error
+
+[1mdiff --git a/.vscode/settings.json b/.vscode/settings.json[m
+[1mnew file mode 100644[m
+[1mindex 0000000..017186a[m
+[1m--- /dev/null[m
+[1m+++ b/.vscode/settings.json[m
+[36m@@ -0,0 +1,32 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m    "python.pythonPath": "C:\\Users\\IVAN\\Anaconda3\\envs\\django3\\python.exe",[m
+[32m+[m[32m    // my custom settings[m
+[32m+[m[32m    "editor.formatOnSave": true,[m
+[32m+[m[32m    "editor.rulers": [[m
+[32m+[m[32m        80,[m
+[32m+[m[32m        120[m
+[32m+[m[32m    ],[m
+[32m+[m[32m    "files.exclude": {[m
+[32m+[m[32m        "**/.git": true,[m
+[32m+[m[32m        "**/.svn": true,[m
+[32m+[m[32m        "**/.hg": true,[m
+[32m+[m[32m        "**/CVS": true,[m
+[32m+[m[32m        "**/.DS_Store": true,[m
+[32m+[m[32m        ".vscode": true,[m
+[32m+[m[32m        "**/*.pyc": true,[m
+[32m+[m[32m    },[m
+[32m+[m[32m    "workbench.editor.enablePreview": false,[m
+[32m+[m[32m    "editor.minimap.enabled": false,[m
+[32m+[m[32m    "python.linting.pylintArgs": [[m
+[32m+[m[32m        "--load-plugins",[m
+[32m+[m[32m        "pylint_django"[m
+[32m+[m[32m    ],[m
+[32m+[m[32m    "files.associations": {[m
+[32m+[m[32m        "**/templates/*.html": "django-html",[m
+[32m+[m[32m        "**/templates/*": "django-txt",[m
+[32m+[m[32m        "**/requirements{/**,*}.{txt,in}": "pip-requirements"[m
+[32m+[m[32m    },[m
+[32m+[m[32m    "emmet.includeLanguages": {[m
+[32m+[m[32m        "django-html": "html"[m
+[32m+[m[32m    },[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/db.sqlite3 b/db.sqlite3[m
+[1mindex 10f0c19..156e031 100644[m
+Binary files a/db.sqlite3 and b/db.sqlite3 differ
+[1mdiff --git a/main/__pycache__/urls.cpython-37.pyc b/main/__pycache__/urls.cpython-37.pyc[m
+[1mindex f747d29..891eb23 100644[m
+Binary files a/main/__pycache__/urls.cpython-37.pyc and b/main/__pycache__/urls.cpython-37.pyc differ
+[1mdiff --git a/main/__pycache__/views.cpython-37.pyc b/main/__pycache__/views.cpython-37.pyc[m
+[1mindex da96443..3696ced 100644[m
+Binary files a/main/__pycache__/views.cpython-37.pyc and b/main/__pycache__/views.cpython-37.pyc differ
+[1mdiff --git a/main/templates/main/includes/mensajes.html b/main/templates/main/includes/mensajes.html[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ba7961d[m
+[1m--- /dev/null[m
+[1m+++ b/main/templates/main/includes/mensajes.html[m
+[36m@@ -0,0 +1,45 @@[m
+[32m+[m[32m{% if messages %}[m
+[32m+[m[32m    {% for message in messages %}[m
+[32m+[m[32m    <p>{{message}}</p>[m
+[32m+[m[32m        {% if message.tags == 'success' %}[m
+[32m+[m[32m        <script>[m
+[32m+[m[32m            M.toast({[m
+[32m+[m[32m                html: '{{message}}',[m
+[32m+[m[32m                classes: 'green rounded',[m
+[32m+[m[32m                displayLength: 2000,[m
+[32m+[m[32m            });[m
+[32m+[m[32m        </script>[m
+[32m+[m[32m        {% endif %}[m
+[32m+[m
+[32m+[m[32m        {% if message.tags == 'info' %}[m
+[32m+[m[32m        <script type="text/javascript">[m
+[32m+[m[32m            M.toast({[m
+[32m+[m[32m                html: '{{message}}',[m
+[32m+[m[32m                classes: 'blue rounded',[m
+[32m+[m[32m                displayLength: 2000,[m
+[32m+[m[32m            });[m
+[32m+[m[32m        </script>[m
+[32m+[m[32m        {% endif %}[m
+[32m+[m
+[32m+[m[32m        {% if message.tags == 'warning' %}[m
+[32m+[m[32m        <script type="text/javascript">[m
+[32m+[m[32m            M.toast({[m
+[32m+[m[32m                html: '{{message}}',[m
+[32m+[m[32m                classes: 'orange rounded',[m
+[32m+[m[32m                displayLength: 2000,[m
+[32m+[m[32m            });[m
+[32m+[m[32m        </script>[m
+[32m+[m[32m        {% endif %}[m
+[32m+[m
+[32m+[m[32m        {% if message.tags == 'error' %}[m
+[32m+[m[32m        <script type="text/javascript">[m
+[32m+[m[32m            M.toast({[m
+[32m+[m[32m                html: '{{message}}',[m
+[32m+[m[32m                classes: 'red rounded',[m
+[32m+[m[32m                displayLength: 2000,[m
+[32m+[m[32m            });[m
+[32m+[m[32m        </script>[m
+[32m+[m[32m        {% endif %}[m
+[32m+[m
+[32m+[m[32m    {% endfor %}[m
+[32m+[m[32m{% endif %}[m
+\ No newline at end of file[m
+[1mdiff --git a/main/templates/main/includes/navbar.html b/main/templates/main/includes/navbar.html[m
+[1mnew file mode 100644[m
+[1mindex 0000000..4f00ed9[m
+[1m--- /dev/null[m
+[1m+++ b/main/templates/main/includes/navbar.html[m
+[36m@@ -0,0 +1,36 @@[m
+[32m+[m[32m<nav class="nav-extended">[m
+[32m+[m[32m    <div class="nav-wrapper">[m
+[32m+[m[32m      <a href="#" class="brand-logo">Utilnoticias</a>[m
+[32m+[m[32m      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>[m
+[32m+[m[32m      <ul id="nav-mobile" class="right hide-on-med-and-down">[m
+[32m+[m[32m        <li><a href="/">Inicio</a></li>[m
+[32m+[m[32m        {% if user.is_authenticated %}[m
+[32m+[m[32m            <li><a href="/user">{{user.username}}</a></li>[m
+[32m+[m[32m            <li><a href="/logout">Salir</a></li>[m[41m  [m
+[32m+[m[32m        {% else %}[m
+[32m+[m[32m            <li><a href="/registro">Registro</a></li>[m
+[32m+[m[32m            <li><a href="/login">Login</a></li>[m[41m         [m
+[32m+[m[32m        {% endif %}[m
+[32m+[m
+[32m+[m[32m      </ul>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m    <div class="nav-content">[m
+[32m+[m[32m      <ul class="tabs tabs-transparent">[m
+[32m+[m[32m        <li class="tab"><a href="#test1">Test 1</a></li>[m
+[32m+[m[32m        <li class="tab"><a class="active" href="#test2">Test 2</a></li>[m
+[32m+[m[32m        <li class="tab disabled"><a href="#test3">Disabled Tab</a></li>[m
+[32m+[m[32m        <li class="tab"><a href="#test4">Test 4</a></li>[m
+[32m+[m[32m      </ul>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m  </nav>[m
+[32m+[m
+[32m+[m[32m  <!-- <ul class="sidenav" id="mobile-demo">[m
+[32m+[m[32m    <li><a href="sass.html">Sass</a></li>[m
+[32m+[m[32m    <li><a href="badges.html">Components</a></li>[m
+[32m+[m[32m    <li><a href="collapsible.html">JavaScript</a></li>[m
+[32m+[m[32m  </ul> -->[m
+[32m+[m
+[32m+[m[32m  <!-- <div id="test1" class="col s12">Test 1</div>[m
+[32m+[m[32m  <div id="test2" class="col s12">Test 2</div>[m
+[32m+[m[32m  <div id="test3" class="col s12">Test 3</div>[m
+[32m+[m[32m  <div id="test4" class="col s12">Test 4</div> -->[m
+\ No newline at end of file[m
+[1mdiff --git a/main/templates/main/inicio.html b/main/templates/main/inicio.html[m
+[1mindex 8521cbd..674278e 100644[m
+[1m--- a/main/templates/main/inicio.html[m
+[1m+++ b/main/templates/main/inicio.html[m
+[36m@@ -1,6 +1,6 @@[m
+ {% extends "main/principal.html" %}[m
+ {% block content %}[m
+[31m-    <div class="container">[m
+[32m+[m[41m    [m
+       <div class="row">[m
+           {% for new in news %}[m
+           <div class="col s16 m6">[m
+[36m@@ -18,5 +18,5 @@[m
+           </div>[m
+           {% endfor %}[m
+         </div>[m
+[31m-      </div>[m
+[32m+[m[41m      [m
+ {% endblock %}[m
+\ No newline at end of file[m
+[1mdiff --git a/main/templates/main/principal.html b/main/templates/main/principal.html[m
+[1mindex a620b57..64e6daa 100644[m
+[1m--- a/main/templates/main/principal.html[m
+[1m+++ b/main/templates/main/principal.html[m
+[36m@@ -16,23 +16,19 @@[m
+     <title>Noticias</title>[m
+ </head>[m
+ <body>[m
+[31m-    <nav>[m
+[31m-        <div class="nav-wrapper">[m
+[31m-          <a href="#!" class="brand-logo"><i class="material-icons">cloud</i>Mabe news</a>[m
+[31m-          <ul class="right hide-on-med-and-down">[m
+[31m-            <li><a href="#"><i class="material-icons">search</i></a></li>[m
+[31m-            <li><a href="#"><i class="material-icons">view_module</i></a></li>[m
+[31m-            <li><a href="#"><i class="material-icons">refresh</i></a></li>[m
+[31m-            <li><a href="#"><i class="material-icons">more_vert</i></a></li>[m
+[31m-          </ul>[m
+[31m-        </div>[m
+[31m-      </nav>[m
+ [m
+[32m+[m[32m    {% include "main/includes/navbar.html" %}[m
+[32m+[m
+[32m+[m
+[32m+[m[32m      <div class="container">[m
+[32m+[m[32m            <br>[m
+ {% block content %}[m
+ {% endblock %}[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>[m
+ [m
+[31m-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->[m
+[32m+[m[32m{% include 'main/includes/mensajes.html' %}[m
+ [m
+[31m-</body>[m
+ <script src="{% static 'tynimce/css/prism.js' %}"></script>[m
+[32m+[m[32m</body>[m
+ </html>[m
+\ No newline at end of file[m
+[1mdiff --git a/main/templates/main/registro.html b/main/templates/main/registro.html[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ce8e5b8[m
+[1m--- /dev/null[m
+[1m+++ b/main/templates/main/registro.html[m
+[36m@@ -0,0 +1,13 @@[m
+[32m+[m[32m{% extends "main/principal.html" %}[m
+[32m+[m[32m{% block content %}[m
+[32m+[m
+[32m+[m[32m<form action="" method=POST>[m
+[32m+[m[32m    {% csrf_token %}  <!-- impide que se acceda de otra pagina-->[m
+[32m+[m[32m    {{ form.as_p }}[m
+[32m+[m[32m    <br>[m
+[32m+[m[32m    <button class="btn" type="submit">Registrar</button>[m
+[32m+[m[32m</form>[m
+[32m+[m
+[32m+[m[32msi ya tiene una cuenta, vaya a <a href='#'>Entrar</a>[m
+[32m+[m
+[32m+[m[32m{% endblock %}[m
+\ No newline at end of file[m
+[1mdiff --git a/main/urls.py b/main/urls.py[m
+[1mindex 859df27..03918a5 100644[m
+[1m--- a/main/urls.py[m
+[1m+++ b/main/urls.py[m
+[36m@@ -5,5 +5,6 @@[m [mapp_name = 'main'[m
+ [m
+ urlpatterns = [[m
+     path('', views.homepage, name='homepage'),[m
+[32m+[m[32m    path('registro/', views.registro, name="registro"),[m
+ ][m
+ [m
+[1mdiff --git a/main/views.py b/main/views.py[m
+[1mindex c645b26..2149f12 100644[m
+[1m--- a/main/views.py[m
+[1m+++ b/main/views.py[m
+[36m@@ -1,5 +1,9 @@[m
+[31m-from django.shortcuts import render[m
+[32m+[m[32mfrom django.shortcuts import render, redirect[m
+ from django.http import HttpResponse[m
+[32m+[m[32mfrom django.contrib.auth.forms import UserCreationForm[m
+[32m+[m[32mfrom django.contrib.auth import login, logout, authenticate[m
+[32m+[m[32mfrom django.contrib import messages[m
+[32m+[m
+ from .models import Curso[m
+ # Create your views here.[m
+ [m
+[36m@@ -84,4 +88,25 @@[m [marticulos = list(extraerArticulos(feedsPolitica))[m
+ [m
+ def homepage(request):[m
+     return render(request, "main/inicio.html", {"news":articulos1,}) #recibe dato, nomplantilla y diccionario de variables(opcional)[m
+[31m-    #return HttpResponse("Hola mundo") #por ahora retorna una http[m
+\ No newline at end of file[m
+[32m+[m[32m    #return HttpResponse("Hola mundo") #por ahora retorna una http[m
+[32m+[m
+[32m+[m[32mdef registro(request):[m
+[32m+[m[32m    form = UserCreationForm[m
+[32m+[m
+[32m+[m[32m    if request.method == "POST":[m
+[32m+[m[32m        form = UserCreationForm(request.POST)[m
+[32m+[m[32m        form.fields['username'].help_text = None[m
+[32m+[m[32m        form.fields['password1'].help_text = None[m
+[32m+[m[32m        form.fields['password2'].help_text = None[m
+[32m+[m[32m        if form.is_valid():[m
+[32m+[m[32m            usuario = form.save()[m
+[32m+[m[32m            nombre_usuario = form.cleaned_data.get('username') #obtiene el nombre del usuario[m
+[32m+[m[32m            messages.success(request, f"Nueva Cuenta Creada : {nombre_usuario}") #crea un mensaje para el usuario[m
+[32m+[m[32m            login(request, usuario)[m
+[32m+[m[32m            messages.info(request, f"Has sido logueado como {nombre_usuario}")[m
+[32m+[m[32m            return redirect("main:homepage")[m
+[32m+[m[32m        else:[m
+[32m+[m[32m            for msg in form.error_messages:[m
+[32m+[m[32m                messages.error(request, f"{msg}: form.error_messages[msg]")[m
+[32m+[m[41m    [m
+[32m+[m[32m    return render(request, "main/registro.html", {"form":form})[m
+\ No newline at end of file[m
+[1mdiff --git a/misitio/__pycache__/settings.cpython-37.pyc b/misitio/__pycache__/settings.cpython-37.pyc[m
+[1mindex 7f145f4..0b53ebd 100644[m
+Binary files a/misitio/__pycache__/settings.cpython-37.pyc and b/misitio/__pycache__/settings.cpython-37.pyc differ
+[1mdiff --git a/misitio/settings.py b/misitio/settings.py[m
+[1mindex eb6f27a..41e09d2 100644[m
+[1m--- a/misitio/settings.py[m
+[1m+++ b/misitio/settings.py[m
+[36m@@ -105,7 +105,7 @@[m [mAUTH_PASSWORD_VALIDATORS = [[m
+ # Internationalization[m
+ # https://docs.djangoproject.com/en/3.0/topics/i18n/[m
+ [m
+[31m-LANGUAGE_CODE = 'en-us'[m
+[32m+[m[32mLANGUAGE_CODE = 'es'[m
+ [m
+ TIME_ZONE = 'UTC'[m
+ [m
+
+[33mcommit 2927cc1242de20e34845a94419f534067dc46079[m
+Author: ivansoriasolis <soria.solis.ivan@googlemail.com>
+Date:   Tue Sep 22 22:03:05 2020 -0500
+
+    con extends
+
+[1mdiff --git a/main/__pycache__/views.cpython-37.pyc b/main/__pycache__/views.cpython-37.pyc[m
+[1mindex e7b94c1..da96443 100644[m
+Binary files a/main/__pycache__/views.cpython-37.pyc and b/main/__pycache__/views.cpython-37.pyc differ
+[1mdiff --git a/main/templates/main/inicio.html b/main/templates/main/inicio.html[m
+[1mindex 0e1b914..8521cbd 100644[m
+[1m--- a/main/templates/main/inicio.html[m
+[1m+++ b/main/templates/main/inicio.html[m
+[36m@@ -1,55 +1,22 @@[m
+[31m-<!DOCTYPE html>[m
+[31m-<html lang="en">[m
+[31m-<head>[m
+[31m-    <meta charset="UTF-8">[m
+[31m-    <meta name="viewport" content="width=device-width, initial-scale=1.0">[m
+[31m-    {% load static %}[m
+[31m-    <link rel="stylesheet" href="{% static 'tynimce/css/prism.css' %}">[m
+[31m-      <!--Import Google Icon Font-->[m
+[31m-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">[m
+[31m-      <!--Import materialize.css-->[m
+[31m-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">[m
+[31m-[m
+[31m-      <!--Let browser know website is optimized for mobile-->[m
+[31m-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>[m
+[31m-[m
+[31m-    <title>Noticias</title>[m
+[31m-</head>[m
+[31m-<body>[m
+[31m-    <nav>[m
+[31m-        <div class="nav-wrapper">[m
+[31m-          <a href="#!" class="brand-logo"><i class="material-icons">cloud</i>Mabe news</a>[m
+[31m-          <ul class="right hide-on-med-and-down">[m
+[31m-            <li><a href="#"><i class="material-icons">search</i></a></li>[m
+[31m-            <li><a href="#"><i class="material-icons">view_module</i></a></li>[m
+[31m-            <li><a href="#"><i class="material-icons">refresh</i></a></li>[m
+[31m-            <li><a href="#"><i class="material-icons">more_vert</i></a></li>[m
+[31m-          </ul>[m
+[31m-        </div>[m
+[31m-      </nav>[m
+[31m-[m
+[32m+[m[32m{% extends "main/principal.html" %}[m
+[32m+[m[32m{% block content %}[m
+     <div class="container">[m
+[31m-    <div class="row">[m
+[31m-        {% for new in news %}[m
+[31m-        <div class="col s16 m6">[m
+[31m-          <div class="card blue-grey darken-1 small">[m
+[31m-              [m
+[31m-            <div class="card-content white-text">[m
+[31m-              <span class="card-title">{{new.titulo}}</span>[m
+[31m-              <p class="fonts">{{new.fecha}}</p>[m
+[31m-              <p>{{new.descripcion|safe}}</p>[m
+[31m-            </div>[m
+[31m-            <div class="card-action">[m
+[31m-              <a href="{{ new.url }}">Ver noticia...</a>[m
+[32m+[m[32m      <div class="row">[m
+[32m+[m[32m          {% for new in news %}[m
+[32m+[m[32m          <div class="col s16 m6">[m
+[32m+[m[32m            <div class="card blue-grey darken-1 small">[m
+[32m+[m[41m                [m
+[32m+[m[32m              <div class="card-content white-text">[m
+[32m+[m[32m                <span class="card-title">{{new.titulo}}</span>[m
+[32m+[m[32m                <p class="fonts">{{new.fecha}}</p>[m
+[32m+[m[32m                <p>{{new.descripcion|safe}}</p>[m
+[32m+[m[32m              </div>[m
+[32m+[m[32m              <div class="card-action">[m
+[32m+[m[32m                <a href="{{ new.url }}">Ver noticia...</a>[m
+[32m+[m[32m              </div>[m
+             </div>[m
+           </div>[m
+[32m+[m[32m          {% endfor %}[m
+         </div>[m
+[31m-        {% endfor %}[m
+       </div>[m
+[31m-    </div>[m
+[31m-[m
+[31m-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->[m
+[31m-[m
+[31m-</body>[m
+[31m-<script src="{% static 'tynimce/css/prism.js' %}"></script>[m
+[31m-</html>[m
+[32m+[m[32m{% endblock %}[m
+\ No newline at end of file[m
+[1mdiff --git a/main/templates/main/principal.html b/main/templates/main/principal.html[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a620b57[m
+[1m--- /dev/null[m
+[1m+++ b/main/templates/main/principal.html[m
+[36m@@ -0,0 +1,38 @@[m
+[32m+[m[32m<!DOCTYPE html>[m
+[32m+[m[32m<html lang="en">[m
+[32m+[m[32m<head>[m
+[32m+[m[32m    <meta charset="UTF-8">[m
+[32m+[m[32m    <meta name="viewport" content="width=device-width, initial-scale=1.0">[m
+[32m+[m[32m    {% load static %}[m
+[32m+[m[32m    <link rel="stylesheet" href="{% static 'tynimce/css/prism.css' %}">[m
+[32m+[m[32m      <!--Import Google Icon Font-->[m
+[32m+[m[32m      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">[m
+[32m+[m[32m      <!--Import materialize.css-->[m
+[32m+[m[32m      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">[m
+[32m+[m
+[32m+[m[32m      <!--Let browser know website is optimized for mobile-->[m
+[32m+[m[32m      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>[m
+[32m+[m
+[32m+[m[32m    <title>Noticias</title>[m
+[32m+[m[32m</head>[m
+[32m+[m[32m<body>[m
+[32m+[m[32m    <nav>[m
+[32m+[m[32m        <div class="nav-wrapper">[m
+[32m+[m[32m          <a href="#!" class="brand-logo"><i class="material-icons">cloud</i>Mabe news</a>[m
+[32m+[m[32m          <ul class="right hide-on-med-and-down">[m
+[32m+[m[32m            <li><a href="#"><i class="material-icons">search</i></a></li>[m
+[32m+[m[32m            <li><a href="#"><i class="material-icons">view_module</i></a></li>[m
+[32m+[m[32m            <li><a href="#"><i class="material-icons">refresh</i></a></li>[m
+[32m+[m[32m            <li><a href="#"><i class="material-icons">more_vert</i></a></li>[m
+[32m+[m[32m          </ul>[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m      </nav>[m
+[32m+[m
+[32m+[m[32m{% block content %}[m
+[32m+[m[32m{% endblock %}[m
+[32m+[m
+[32m+[m[32m    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->[m
+[32m+[m
+[32m+[m[32m</body>[m
+[32m+[m[32m<script src="{% static 'tynimce/css/prism.js' %}"></script>[m
+[32m+[m[32m</html>[m
+\ No newline at end of file[m
+[1mdiff --git a/main/views.py b/main/views.py[m
+[1mindex 2950577..c645b26 100644[m
+[1m--- a/main/views.py[m
+[1m+++ b/main/views.py[m
+[36m@@ -48,7 +48,7 @@[m [mdef extraerArticulosAPI(response_json):[m
+     for a in response_json['articles']:[m
+         yield(articulo(a))[m
+ [m
+[31m-articulos = list(extraerArticulosAPI(response_json))[m
+[32m+[m[32marticulos1 = list(extraerArticulosAPI(response_json))[m
+ [m
+ import feedparser    [m
+ [m
+[36m@@ -57,7 +57,11 @@[m [mfeedsPolitica = [[m
+         { 'diario': 'El Comercio', 'urlfeed': "https://archivo.elcomercio.pe/feed/politica.xml" },[m
+         { 'diario': 'La República', 'urlfeed': "https://larepublica.pe/rss/politica.xml?outputType=rss" },[m
+         { 'diario': 'Peru.com', 'urlfeed': "https://peru.com/feed/actualidad/politicas" },[m
+[31m-        ][m
+[32m+[m[32m    ][m
+[32m+[m
+[32m+[m[32mfeedsEconomia = [[m
+[32m+[m[32m        { 'diario': 'Gestión', 'urlfeed': "http://espresso.gestion.pe/feed/politica"},[m
+[32m+[m[32m    ][m
+ [m
+ [m
+ def extraerArticulos(feeds):[m
+[36m@@ -79,5 +83,5 @@[m [marticulos = list(extraerArticulos(feedsPolitica))[m
+ [m
+ [m
+ def homepage(request):[m
+[31m-    return render(request, "main/inicio.html", {"news":articulos,}) #recibe dato, nomplantilla y diccionario de variables(opcional)[m
+[32m+[m[32m    return render(request, "main/inicio.html", {"news":articulos1,}) #recibe dato, nomplantilla y diccionario de variables(opcional)[m
+     #return HttpResponse("Hola mundo") #por ahora retorna una http[m
+\ No newline at end of file[m
+[1mdiff --git a/misitio/__pycache__/settings.cpython-37.pyc b/misitio/__pycache__/settings.cpython-37.pyc[m
+[1mindex c97096d..7f145f4 100644[m
+Binary files a/misitio/__pycache__/settings.cpython-37.pyc and b/misitio/__pycache__/settings.cpython-37.pyc differ
+[1mdiff --git a/misitio/settings.py b/misitio/settings.py[m
+[1mindex 80f4f1a..eb6f27a 100644[m
+[1m--- a/misitio/settings.py[m
+[1m+++ b/misitio/settings.py[m
+[36m@@ -120,8 +120,8 @@[m [mUSE_TZ = True[m
+ [m
+ STATIC_URL = '/static/'[m
+ # https://docs.djangoproject.com/en/3.0/howto/static-files/[m
+[31m-MEDIA_ROOT = '/home/ivansoriasolis/misitio/media'[m
+[32m+[m[32mMEDIA_ROOT = '/home/Ultinoticias/misitio/media'[m
+ MEDIA_URL = '/media/'[m
+[31m-STATIC_ROOT = '/home/ivansoriasolis/misitio/static'[m
+[32m+[m[32mSTATIC_ROOT = '/home/Ultinoticias/misitio/static'[m
+ STATIC_URL = '/static/'[m
+ STATIC_URL = '/static/'[m
+\ No newline at end of file[m

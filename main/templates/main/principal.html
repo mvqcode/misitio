@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+    <link rel="icon" href="{% static 'favicon.ico' %}" type='image/x-icon'>
+
+    <script>
+        libre = true;
+        $(document).ready(function () {
+            $(".btn-floating").mousedown(function () {
+                boton = this;
+                if (libre) {
+                    libre = false;
+                    $.ajax({
+                        url: "{% url 'main:check' %}",
+                        type: 'POST', // or another (GET), whatever you need
+                        data: {
+                            id: this.id, // data you need to pass to your function
+                            usuario: $("#nomusuario").text(),
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        },
+
+                        success: function (data) {
+                            //alert(data);      
+                            if (data == 'true') {
+                                boton.className = 'btn-floating halfway-fab waves-effect waves-light green';
+                                $(boton).attr('onmouseup', "M.toast({html: 'Preferencia eliminada', classes: 'red rounded', displayLength: 1000,})")
+                                libre = true;
+                            }
+                            if (data == 'false') {
+                                boton.className = 'btn-floating halfway-fab waves-effect waves-light red';
+                                $(boton).attr('onmouseup', "M.toast({html: 'Preferencia guardada', classes: 'green rounded', displayLength: 1000,})")
+                                libre = true;
+                            }
+                        }
+                    });
+
+                }
+            });
+
+            $(".dropdown-trigger").dropdown();
+
+            $(".modal-trigger").click(function () {
+                boton = this;
+                linknoticia = boton.getAttribute("enlace");
+                $("#framenoticia").attr("src", linknoticia);
+            });
+
+            $(document).ready(function () {
+                $('.modal').modal();
+            });
+
+
+        });
+    </script>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        #modal {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .modal {
+            width: 90%;
+            height: 100%;
+        }
+
+        .modal-content {
+            width: 100%;
+            height: 85%;
+        }
+
+        .modal-fixed-footer {
+            height: 100%;
+        }
+
+        .btn-floating.halfway-fab {
+            position: absolute;
+            right: 24px;
+            bottom: -10px;
+        }
+
+        .modal {
+            max-height: 85%;
+        }
+    </style>
+    <title>Ultinoticias</title>
+</head>
+
+<body>
+    <a name="home"></a>
+    <header>
+        {% include "main/includes/navbar.html" %}
+    </header>
+    <main>
+
+        <div class="container" style="margin-top: 5%; z-index: 2;">
+            {% block content %}
+            {% endblock %}
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+            {% include 'main/includes/mensajes.html' %}
+        </div>
+
+
+    </main>
+
+    {% include 'main/includes/footer.html' %}
+
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+{% extends "main/principal.html" %}
+{% block content %}
+
+<form action="" method=POST>
+    {% csrf_token %} 
+    {{ form.username.label}} <!-- impide que se acceda de otra pagina-->
+    {{ form.username}}
+    <p style="font-size: 10px">{{ form.username.help_text}}</p>
+    {{ form.password1.label}} <!-- impide que se acceda de otra pagina-->
+    {{ form.password1}}
+    <p style="font-size: 10px">Debe contener letras y números y no contener otros datos con informacion personal</p>
+    {{ form.password2.label}} <!-- impide que se acceda de otra pagina-->
+    {{ form.password2}}
+    <p style="font-size: 10px">{{ form.password2.help_text}}</p>
+    <br>
+    <br>
+    <button class="btn" type="submit">Registrar</button>
+</form>
+<br>
+si ya tiene una cuenta, vaya a <a href='/login'>Entrar</a>
+<br>
+<br>
+{% endblock %}

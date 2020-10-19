@@ -1,0 +1,70 @@
+{% extends "main/principal.html" %}
+
+{% block content %}
+
+{% if  user.is_authenticated %}
+<h4>Hola {{ user.username }} </h4>
+{% else %}
+<a href="{% url 'sign_up' %}">Regístrate</a>
+{% endif %}
+<div class="row">
+    <p>La actividad que realizas en este site está siendo registrada con el fin de presentarte las mejores
+        recomendaciones
+        de noticias.</p>
+    <p>Si no encuentras lo que buscas, puedes sugerir el URL del portal de noticias de tu preferencia.
+    </p>
+    <p>El algoritmo de <i>scrapping</i> se vale de la estructura RSS de lás páginas de noticias, no todas las páginas
+        son legibles con esta técnica. Estamos trabajando para implementar técnicas de <i>crawling</i> que permitan leer
+        sites de diseños y arquitecturas arbitrarias.</p>
+    <p>Te agradeceremos sugerirnos el portal de noticias de tu preferencia para que nuestro staff se ponga a trabajar en
+        ello.</p>
+    <br>
+    <form id="miForm">
+    <input id="urlsugerencia" type="text" placeholder="URL de la página que quieres incluir">
+    <button class="btn waves-effect waves-light" type="submit" name="action" onclick="document.getElementById("miForm").;">Enviar
+        <i class="material-icons right">send</i>
+    </button>
+    </form>
+    <br>
+    <br>
+    <b>Gracias por utilizar el servicio.</b>
+    <br>
+    <br>
+    <h5>Tu historial:</h5>
+    {% for new in news %}
+    <div class="row s12 m6">
+        <div class="card tiny">
+            <div class="card-content black-text" style="height: 82%; padding:18px;">
+                <span class="card-title"
+                    style="font-size:medium; line-height: 120%;text-align: justify;"><b>{{new.id_noticia.titulo}}</b></span>
+                <p style="font-size:x-small; color:goldenrod; text-align: justify;">{{new.id_noticia.nombre}}</p>
+                <p style="font-size:xx-small; font-style: italic;">{{new.id_noticia.fecha}}</p>
+                <p style="font-size:x-small;line-height:116%; height: 100%; text-align: justify;">
+                    {% if new.id_noticia.descripcion %}
+                    {{new.id_noticia.descripcion|safe|truncatewords:"40"}}
+                    {% else %}
+                    Esta página no publica su contenido, para leer la nonticia completa haga click en "Leer..."
+                    {% endif %}
+                    <!-- <a class="btn-floating halfway-fab waves-effect waves-light red"
+                        onmouseup="M.toast({html: 'Inicie sesión para obtener recomendaciones', classes: 'rounded', displayLength: 1000,})">
+                        <i class="material-icons">delete</i>
+                    </a> -->
+            </div>
+            <!-- <div class="card-action" style="height: 15%; ">
+                <button data-target="visor" class="btn modal-trigger" enlace="{{new.url}}"
+                    style="bottom: -10px; position:absolute; height:40px;">Leer...</button>
+            </div> -->
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div id="visor" class="modal modal-fixed-footer" style="width: 95%; height: 100%">
+    <div class="modal-content">
+        <iframe id="framenoticia" frameborder="0" style="width: 100%; height: 95%"></iframe>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+    </div>
+</div>
+
+{% endblock %}
