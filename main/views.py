@@ -74,7 +74,7 @@ def obtenerFuentes(categorias):
     for categoria in categorias:
         # seleccion por un Foreign Key
         fuentes = Fuente.objects.filter(
-            categoria__categoria=categoria['categoria']).values()
+            categoria__categoria=categoria['categoria']).filter(activo=True).values()
         articulosCategoria = list(extraerArticulos(fuentes))
         articulosCategoria.sort(key=lambda x: x.fecha, reverse=True)
         articulos = articulos + articulosCategoria
@@ -106,7 +106,14 @@ def grabaNoticia(articulo):
     return instancia
 
 
-def calculaDistancias():
+def normalizatexto(texto):
+    '''
+    Normaliza el texto para evitar que caracteres extraños entren al conteo de palabras
+    '''
+    return unicodedata.normalize('NFKD', texto).encode('ASCII', 'ignore').strip().lower()
+
+
+def calculaDistancias(articulos):
 
     articulos.sort(key=lambda x: x.fecha, reverse=True)
 
@@ -117,12 +124,6 @@ def calculaDistancias():
             "-" + articulo.descripcion + "\"\n"
         f.write(linea)
     f.close()
-
-    def normalizatexto(texto):
-        '''
-        Normaliza el texto para evitar que caracteres extraños entren al conteo de palabras
-        '''
-        return unicodedata.normalize('NFKD', texto).encode('ASCII', 'ignore').strip().lower()
 
     # Prepara el vector de puntajes para hacer las recomendaciones
 
@@ -149,11 +150,16 @@ def calculaDistancias():
 
 categorias = Categoria.objects.all().values()
 articulos, todosXcategoria = obtenerFuentes(categorias)
-results = calculaDistancias()
+results = calculaDistancias(articulos)
 
 
 # def item(id):
 #     return ds.loc[ds['id'] == id]['description'].tolist()[0].split(' - ')[0]
+def refrescar(request):
+    categorias = Categoria.objects.all().values()
+    articulos, todosXcategoria = obtenerFuentes(categorias)
+    results = calculaDistancias(articulos)
+    return redirect("main:homepage")
 
 
 def recommend(item_id, num):
