@@ -1,13 +1,13 @@
 <!--INICIO  ZONA DESPLEGABLE DE CATEGORÍAS-->
 <ul id="dropdown1" class="dropdown-content">
   {% for categoria in categorias %}
-  {% if activa == categoria.nomcat %}
+  {% if activa == categoria.categoria %}
   <li class="tab grey">
-    <p style="color: aliceblue;"><a href="/{{ categoria.nomcat }}">{{ categoria.textcat }}</a></p>
+    <p style="color: aliceblue;"><a href="/categoria/{{ categoria.categoria }}">{{ categoria.descripcion }}</a></p>
   </li>
   <li class="divider"></li>
   {% else %}
-  <li class="tab"><a href="/{{ categoria.nomcat }}">{{ categoria.textcat }}</a></li>
+  <li class="tab"><a href="/categoria/{{ categoria.categoria }}">{{ categoria.descripcion }}</a></li>
   {% endif %}
   {% endfor %}
 </ul>
@@ -100,12 +100,12 @@
 
   <ul>
     {% for categoria in categorias %}
-    {% if activa == categoria.nomcat %}
+    {% if activa == categoria.categoria %}
     <li>
-      <a class="active" href="/{{ categoria.nomcat }}"><b>{{ categoria.textcat }}</b></a>
+      <a class="active" href="/categoria/{{ categoria.categoria }}"><b>{{ categoria.descripcion }}</b></a>
     </li>
     {% else %}
-    <li><a href="/{{ categoria.nomcat }}">{{ categoria.textcat }}</a></li>
+    <li><a href="/categoria/{{ categoria.categoria }}">{{ categoria.descripcion }}</a></li>
     {% endif %}
     {% endfor %}
   </ul>

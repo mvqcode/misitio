@@ -443,14 +443,14 @@ Binary files a/main/__pycache__/views.cpython-37.pyc and b/main/__pycache__/view
  import feedparser    [m
  [m
 [36m@@ -57,7 +57,11 @@[m [mfeedsPolitica = [[m
-         { 'diario': 'El Comercio', 'urlfeed': "https://archivo.elcomercio.pe/feed/politica.xml" },[m
-         { 'diario': 'La República', 'urlfeed': "https://larepublica.pe/rss/politica.xml?outputType=rss" },[m
-         { 'diario': 'Peru.com', 'urlfeed': "https://peru.com/feed/actualidad/politicas" },[m
+         { 'diario': 'El Comercio', 'url': "https://archivo.elcomercio.pe/feed/politica.xml" },[m
+         { 'diario': 'La República', 'url': "https://larepublica.pe/rss/politica.xml?outputType=rss" },[m
+         { 'diario': 'Peru.com', 'url': "https://peru.com/feed/actualidad/politicas" },[m
 [31m-        ][m
 [32m+[m[32m    ][m
 [32m+[m
 [32m+[m[32mfeedsEconomia = [[m
-[32m+[m[32m        { 'diario': 'Gestión', 'urlfeed': "http://espresso.gestion.pe/feed/politica"},[m
+[32m+[m[32m        { 'diario': 'Gestión', 'url': "http://espresso.gestion.pe/feed/politica"},[m
 [32m+[m[32m    ][m
  [m
  [m
