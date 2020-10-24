@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "C:\\Users\\IVAN\\Anaconda3\\envs\\django\\python.exe",
+    "python.pythonPath": "C:\\Users\\IVAN\\Anaconda3\\envs\\django3\\python.exe",
     // my custom settings
     "editor.formatOnSave": true,
     "editor.rulers": [

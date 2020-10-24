@@ -4,7 +4,7 @@ import unicodedata
 from sklearn.metrics.pairwise import linear_kernel
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
-import requests
+# import requests
 import pprint
 import random
 import feedparser

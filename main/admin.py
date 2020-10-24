@@ -1,7 +1,7 @@
 from django.contrib import admin
 # se debe registrar el modelo para que aparezca en el administrador
 from .models import Preferencia, Fuente, Categoria, Perfil, Noticia
-from tinymce.widgets import TinyMCE  # importa el plugin tinymce
+# from tinymce.widgets import TinyMCE  # importa el plugin tinymce
 from django.db import models  # es necesario importar para poder haceerle un override
 from django.contrib.auth.models import User, Group
 
